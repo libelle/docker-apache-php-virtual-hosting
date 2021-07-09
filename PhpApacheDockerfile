@@ -1,0 +1,19 @@
+FROM php:8.0.8-apache-buster
+
+# add some packages
+RUN docker-php-ext-install curl gd iconv pdo pdo_mysql soap zip
+
+# Apache Config
+COPY php-apache/project1.conf /etc/apache2/sites-available/project1.conf
+COPY php-apache/project2.conf /etc/apache2/sites-available/project2.conf
+COPY php-apache/mylocal+1-key.pem /etc/apache2/ssl/cert-key.pem
+COPY php-apache/mylocal+1.pem /etc/apache2/ssl/cert.pem
+
+# mod rewrite! SSL!
+RUN a2enmod rewrite
+RUN a2enmod ssl
+
+# enable sites
+RUN a2ensite project1.conf
+RUN a2ensite project2.conf
+RUN service apache2 restart

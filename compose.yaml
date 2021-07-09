@@ -1,0 +1,22 @@
+version: "3.9"
+services:
+    php:
+        container_name: ApachePHPVirtual
+        networks:
+            - apache
+        build:
+            context: .
+            dockerfile: PhpApacheDockerfile
+        volumes:
+            - "./project:/var/www"
+        ports:
+            - 80:80
+            - 443:443
+        extra_hosts:
+            - "project1.mylocal:127.0.0.1" # remember to add "127.0.0.1    project1.mylocal" to your /etc/hosts file or equivalent
+            - "project2.mylocal:127.0.0.1" # remember to add "127.0.0.1    project2.mylocal" to your /etc/hosts file or equivalent
+        hostname: project1.mylocal # default
+        domainname: mylocal
+        tty: true # if you want to debug
+networks:
+    apache:
